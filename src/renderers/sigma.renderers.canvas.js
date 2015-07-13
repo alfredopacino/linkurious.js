@@ -278,17 +278,32 @@
         // - No batching
         if (drawEdgeLabels) {
           renderers = sigma.canvas.edges.labels;
-          for (a = this.edgesOnScreen, i = 0, l = a.length; i < l; i++)
-            if (!a[i].hidden)
-              (renderers[
+          for(var renderer in renderers){
+            if(renderers[renderer].pre){
+              renderers[renderer].pre(this.contexts.labels, embedSettings);
+            }
+          }
+          for (a = this.edgesOnScreen, i = 0, l = a.length; i < l; i++){
+            if (!a[i].hidden){
+              var specialized_renderer = renderers[
                 a[i].type || this.settings(options, 'defaultEdgeType')
-              ] || renderers.def)(
+              ]
+              var def = (specialized_renderer || renderers.def);
+              var render = (def.render || def);
+              render(
                 a[i],
                 graph.nodes(a[i].source),
                 graph.nodes(a[i].target),
                 this.contexts.labels,
                 embedSettings
               );
+            }
+          }
+          for(var renderer in renderers){
+            if(renderers[renderer].post){
+              renderers[renderer].post(this.contexts.labels, embedSettings);
+            }
+          }
         }
       }
     }
@@ -311,7 +326,7 @@
     // Draw labels:
     // - No batching
     if (drawLabels) {
-      renderers = sigma.canvas.labels;
+      renderers = sigma.canvas.labels ;
       for (a = this.nodesOnScreen, i = 0, l = a.length; i < l; i++)
         if (!a[i].hidden)
           (renderers[

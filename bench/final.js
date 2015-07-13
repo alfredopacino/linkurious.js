@@ -1,6 +1,10 @@
 
-PREV_FONT = "";
-var final_def = function(edge, source, target, context, settings) {
+var final_def = {
+  pre: function(context, settings){
+    //console.log("PRE prev font",final_def.prev_font)
+    final_def.prev_font = "";
+  },
+  render: function(edge, source, target, context, settings) {
     if (typeof edge.label !== 'string' || source == target)
       return;
 
@@ -46,14 +50,14 @@ var final_def = function(edge, source, target, context, settings) {
       ].join(' ');
     if (edge.active) {
      new_font = [
-        settings('actwiveFontStyle') || settings('fontStyle'),
+        settings('activeFontStyle') || settings('fontStyle'),
         fontSize + 'px',
         settings('activeFont') || settings('font')
       ].join(' ');
     }
-    if(PREV_FONT != new_font){
+    if(final_def.prev_font != new_font){
       context.font = new_font;
-      PREV_FONT = new_font;
+      final_def.prev_font = new_font;
     }
 
     context.textAlign = 'center';
@@ -130,7 +134,9 @@ var final_def = function(edge, source, target, context, settings) {
       context.closePath();
       context.fill();
       context.restore();
-    }
-
-    
+    }    
+  },
+  post:function(context, settings){
+    //console.log("POST prev font",final_def.prev_font)
   }
+}

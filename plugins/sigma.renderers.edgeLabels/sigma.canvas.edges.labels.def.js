@@ -18,8 +18,10 @@
    * @param  {CanvasRenderingContext2D} context      The canvas context.
    * @param  {configurable}             settings     The settings function.
    */
-  sigma.canvas.edges.labels.def =
-    function(edge, source, target, context, settings) {
+  sigma.canvas.edges.labels.def = {
+    pre:function(ctx, settings){
+    },
+    render: function(edge, source, target, context, settings) {
     if (typeof edge.label !== 'string' || source == target)
       return;
 
@@ -157,5 +159,8 @@
       context.fill();
       context.restore();
     }
-  };
+  },
+  post:function(ctx, settings){
+  },
+};
 }).call(this);
