@@ -392,8 +392,6 @@ var ctx_font_caching = function(edge, source, target, context, settings) {
       size *
       Math.pow(size, -1 / settings('edgeLabelSizePowRatio'));
 
-    context.save();
-
     var new_font = [
         fontStyle,
         fontSize + 'px',
@@ -467,15 +465,16 @@ var ctx_font_caching = function(edge, source, target, context, settings) {
         settings('defaultEdgeLabelColor');
     }
 
-    context.translate(x, y);
+
+    context.translate(x,y);
     context.rotate(angle);
     context.fillText(
       edge.label,
       0,
       (-size / 2) - 3
     );
-
-    context.restore();
+    context.rotate(-angle);
+    context.translate(-x,-y);
 
     function drawBackground(angle, context, fontSize, size, label, x, y) {
       var w = Math.round(
