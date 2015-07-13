@@ -93,6 +93,6 @@ for(def in defs){
    table.push({'def':def,med:milli2nice2(res.median), min:milli2nice2(res.min)})
 }
 
-sigma.canvas.edges.labels.def = defs.current;
+sigma.canvas.edges.labels.def = defs.final;
 
 console.table(table)

@@ -1,6 +1,5 @@
 
 PREV_FONT = "";
-
 var final_def = function(edge, source, target, context, settings) {
     if (typeof edge.label !== 'string' || source == target)
       return;
@@ -60,8 +59,6 @@ var final_def = function(edge, source, target, context, settings) {
     context.textAlign = 'center';
     context.textBaseline = 'alphabetic';
 
-    // force horizontal alignment if not enough space to draw the text,
-    // otherwise draw text along the edge line:
     if ('auto' === settings('edgeLabelAlignment')) { //TODO replace to "aligned"
       angle = Math.atan2(dY * sign, dX * sign);
     }
