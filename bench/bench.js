@@ -7,6 +7,7 @@ function milli2nice(m) {
   var r =  Math.round(m*1000)/1000;
   return r+"ms"
 }
+
 function milli2nice2(m) {
   var r =  Math.round(m*1000)/1000;
   return r
@@ -21,7 +22,6 @@ function median(values) {
     return (values[half-1] + values[half]) / 2.0;
 }
 
-
 function tocsv(results, name){
   var csvContent = "data:text/csv;charset=utf-8,";
   csvContent += results.join('\n');
@@ -31,7 +31,6 @@ function tocsv(results, name){
   link.setAttribute("download", name);
   link.click();
 }
-
 
 function bench(name, fn, options){
   options = options || {};
@@ -73,17 +72,20 @@ defs = {
     hidden: function(){},
     'only text': justtext_def,
     'text + angle': textangle_def,
+    'text + angle with save()': textangle_save_def,
+    'force aligned': force_aligned_def,
+    'no ctx.save()/restore()': no_ctx_save_def,
+    'caching context.font val': ctx_font_caching,
+    'optims combined': final_def,
 };
 
 table = []
-
 
 to_test = function(){
     s.refresh({skipIndexation:true})
 }
 
 bench('warm vm',to_test)
-
 
 for(def in defs){
    sigma.canvas.edges.labels.def = defs[def]
