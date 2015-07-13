@@ -34,7 +34,7 @@ function tocsv(results, name){
 
 function bench(name, fn, options){
   options = options || {};
-  samples = options.samples || 80;
+  samples = options.samples || 30;
   maxtime = options.maxtime || 3; //seconds
   var start, total, times = [];
   var i = 0;
@@ -68,14 +68,14 @@ if(!window.ORIG_DEF){
 }
 
 defs = {
-    //current: ORIG_DEF,
-    //hidden: function(){},
-    //'only text': justtext_def,
-    //'text + angle': textangle_def,
-    //'text + angle with save()': textangle_save_def,
-    //'force aligned': force_aligned_def,
-    //'no ctx.save()/restore()': no_ctx_save_def,
-    //'caching context.font val': ctx_font_caching,
+    current: ORIG_DEF,
+    hidden: function(){},
+    'only text': justtext_def,
+    'text + angle': textangle_def,
+    'text + angle with save()': textangle_save_def,
+    'force aligned': force_aligned_def,
+    'no ctx.save()/restore()': no_ctx_save_def,
+    'caching context.font val': ctx_font_caching,
     'optims combined': final_def,
 };
 
@@ -93,6 +93,6 @@ for(def in defs){
    table.push({'def':def,med:milli2nice2(res.median), min:milli2nice2(res.min)})
 }
 
-sigma.canvas.edges.labels.def = defs.ORIG_DEF;
+sigma.canvas.edges.labels.def = ORIG_DEF;
 
 console.table(table)

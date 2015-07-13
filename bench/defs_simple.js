@@ -353,7 +353,7 @@ var no_ctx_save_def = function(edge, source, target, context, settings) {
     }
   };
 
-
+MY_PREV_FONT = "";
 var ctx_font_caching = function(edge, source, target, context, settings) {
     if (typeof edge.label !== 'string' || source == target)
       return;
