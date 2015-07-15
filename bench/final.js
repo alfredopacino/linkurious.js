@@ -58,7 +58,7 @@ var final_def = {
     }
     if(this.PREV_FONT != new_font){
       context.font = new_font;
-      final_def.prev_font = new_font;
+      this.PREV_FONT = new_font;
     }
 
     context.textAlign = 'center';
