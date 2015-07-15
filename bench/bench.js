@@ -76,6 +76,7 @@ defs = {
     'force aligned': force_aligned_def,
     'no ctx.save()/restore()': no_ctx_save_def,
     'caching context.font val': ctx_font_caching,
+     measure_heuristic: measure_def,
     'optims combined': final_def,
 };
 
