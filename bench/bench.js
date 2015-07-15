@@ -80,6 +80,10 @@ defs = {
     'optims combined': final_def,
 };
 
+defs = {
+  'optims combined': final_def,
+}
+
 table = []
 
 to_test = function(){

@@ -1,9 +1,9 @@
 
+var PREV_FONT = "<lol>";
+
 var final_def = {
-  PREV_FONT:"",
   pre: function(context, settings){
-    //console.log("PRE prev font",this.PREV_FONT)
-    this.PREV_FONT = "";
+    PREV_FONT = "<liiil>";
   },
   render: function(edge, source, target, context, settings) {
     if (typeof edge.label !== 'string' || source == target)
@@ -36,7 +36,6 @@ var final_def = {
     // The final form is:
     // f'(x) = b * x * x^(-1 / a), thus f'(1) = b. Application:
     // fontSize = defaultEdgeLabelSize if edgeLabelSizePowRatio = 1
-    
 
     fontSize = (settings('edgeLabelSize') === 'fixed') ?
       settings('defaultEdgeLabelSize') :
@@ -56,9 +55,10 @@ var final_def = {
         settings('activeFont') || settings('font')
       ].join(' ');
     }
-    if(this.PREV_FONT != new_font){
+    if(PREV_FONT != new_font){
+      //console.log('switch', PREV_FONT,'to',new_font);
       context.font = new_font;
-      this.PREV_FONT = new_font;
+      PREV_FONT = new_font;
     }
 
     context.textAlign = 'center';
@@ -137,7 +137,4 @@ var final_def = {
       context.restore();
     }    
   },
-  post:function(context, settings){
-    //console.log("POST prev font",this.PREV_FONT)
-  }
 }
