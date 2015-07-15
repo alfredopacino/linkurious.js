@@ -116,6 +116,7 @@
    */
   sigma.renderers.canvas.prototype.renderRenderers = function(renderers, type, elements, ctx, start, end, options) {
     var a,
+        i,
         renderer,
         specialized_renderer,
         def,
@@ -124,7 +125,7 @@
         embedSettings = this.settings.embedObjects(options, {
             prefix: this.options.prefix
           });
-    
+
     for(renderer in renderers){
       if(renderers[renderer].pre){
         renderers[renderer].pre(ctx, embedSettings);
