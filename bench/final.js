@@ -1,8 +1,9 @@
 
 var final_def = {
+  PREV_FONT:"",
   pre: function(context, settings){
-    //console.log("PRE prev font",final_def.prev_font)
-    final_def.prev_font = "";
+    //console.log("PRE prev font",this.PREV_FONT)
+    this.PREV_FONT = "";
   },
   render: function(edge, source, target, context, settings) {
     if (typeof edge.label !== 'string' || source == target)
@@ -55,7 +56,7 @@ var final_def = {
         settings('activeFont') || settings('font')
       ].join(' ');
     }
-    if(final_def.prev_font != new_font){
+    if(this.PREV_FONT != new_font){
       context.font = new_font;
       final_def.prev_font = new_font;
     }
@@ -137,6 +138,6 @@ var final_def = {
     }    
   },
   post:function(context, settings){
-    //console.log("POST prev font",final_def.prev_font)
+    //console.log("POST prev font",this.PREV_FONT)
   }
 }
