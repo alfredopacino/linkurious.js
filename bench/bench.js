@@ -34,8 +34,8 @@ function tocsv(results, name){
 
 function bench(name, fn, options){
   options = options || {};
-  samples = options.samples || 30;
-  maxtime = options.maxtime || 3; //seconds
+  samples = options.samples || 50;
+  maxtime = options.maxtime || 5/samples; //seconds
   var start, total, times = [];
   var i = 0;
   for(;i < samples; i++){
@@ -63,28 +63,32 @@ function bench(name, fn, options){
   logtitle(name+'\n    median '+milli2nice(med)+'\n    max='+milli2nice(r.max)+' min='+milli2nice(r.min)+'\n    values: '+times.map(milli2nice).slice(0,10).join(', '))
   return r;
 }
-if(!window.ORIG_DEF){
-    window.ORIG_DEF = sigma.canvas.edges.labels.def;
-}
 
-defs = {
-    current: ORIG_DEF,
-    hidden: function(){},
-    'only text': justtext_def,
-    'text + angle': textangle_def,
-    'text + angle with save()': textangle_save_def,
-    'force aligned': force_aligned_def,
-    'no ctx.save()/restore()': no_ctx_save_def,
-    'caching context.font val': ctx_font_caching,
-     measure_heuristic: measure_def,
-    'optims combined': final_def,
+all_defs = {}
+
+all_defs['sigma.canvas.edges.labels'] = {
+  'only text': justtext_def,
+  'text + angle': textangle_def,
+  'text + angle with save()': textangle_save_def,
+  'force aligned': force_aligned_def,
+  'no ctx.save()/restore()': no_ctx_save_def,
+  'caching context.font val': ctx_font_caching,
+   measure_heuristic: measure_def,
+  'optims combined': final_def,
 };
 
-defs2 = {
-  'optims combined': final_def,
+
+all_defs['sigma.canvas.labels'] = {
+  limit_ctx_switch:ctx_label_def,
+  measure:label_measure_def,
+  label_combined_def:label_combined_def,
 }
 
-table = []
+/*
+all_defs['sigma.canvas.nodes'] = {
+  no_fillstyle:node_no_fill_def
+}
+*/
 
 to_test = function(){
     s.refresh({skipIndexation:true})
@@ -92,12 +96,22 @@ to_test = function(){
 
 //bench('warm vm',to_test)
 
-for(def in defs){
-   sigma.canvas.edges.labels.def = defs[def]
-   var res = bench(def,to_test);
-   table.push({'def':def,med:milli2nice2(res.median), min:milli2nice2(res.min)})
+for(thing_dot_def in all_defs){
+  console.group(thing_dot_def);
+  var table = []
+  var defs = all_defs[thing_dot_def];
+  var thing = eval(thing_dot_def);
+  defs.current = thing.def;
+  defs.hidden = function(){};
+  console.groupCollapsed('details')
+  for(def in defs){
+    thing.def = defs[def];
+    var res = bench(thing_dot_def+' - '+def,to_test);
+    table.push({'def':def,med:milli2nice2(res.median), min:milli2nice2(res.min)})
+  }
+  console.groupEnd()
+  thing.def = defs.current;
+  table = table.sort(function(x,y){return x.min-y.min})
+  console.table(table);
+  console.groupEnd();
 }
-
-sigma.canvas.edges.labels.def = ORIG_DEF;
-
-console.table(table)

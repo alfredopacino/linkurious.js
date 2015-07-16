@@ -9,11 +9,8 @@ var settings = {
     defaultLabelColor: '#000',
     defaultLabelSize: 11,
     labelThreshold: 3,
-    labelAlignment: 'center',
     defaultEdgeLabelSize: 11,
     edgeLabelThreshold: 2,
-    labelHoverShadow: '',
-    edgeLabelHoverShadow: '',
     // Edges:
     edgeColor: 'default',
     defaultEdgeColor: '#393939',

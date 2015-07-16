@@ -494,3 +494,274 @@ var ctx_font_caching = function(edge, source, target, context, settings) {
       context.restore();
     }
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ctx_label_def = {
+  render:function(node, context, settings) {
+    var fontSize,
+        prefix = settings('prefix') || '',
+        size = node[prefix + 'size'],
+        labelWidth,
+        labelOffsetX,
+        labelOffsetY,
+        alignment = settings('labelAlignment');
+
+    if (size < settings('labelThreshold'))
+      return;
+
+    if (!node.label || typeof node.label !== 'string')
+      return;
+
+    fontSize = (settings('labelSize') === 'fixed') ?
+      settings('defaultLabelSize') :
+      settings('labelSizeRatio') * size;
+/*
+    context.font = (settings('fontStyle') ? settings('fontStyle') + ' ' : '') +
+      fontSize + 'px ' + settings('font');
+    context.fillStyle = (settings('labelColor') === 'node') ?
+      (node.color || settings('defaultNodeColor')) :
+      settings('defaultLabelColor');
+*/
+    labelWidth = context.measureText(node.label).width;
+    labelOffsetX = - labelWidth / 2;
+    labelOffsetY = fontSize / 3;
+
+    switch (alignment) {
+      case 'bottom':
+        labelOffsetY = + size + 4 * fontSize / 3;
+        break;
+      case 'center':
+        break;
+      case 'left':
+        labelOffsetX = - size - 3 - labelWidth;
+        break;
+      case 'top':
+        labelOffsetY = - size - 2 * fontSize / 3;
+        break;
+      case 'inside':
+        if (labelWidth <= (size + fontSize / 3) * 2) {
+          break;
+        }
+      /* falls through*/
+      case 'right':
+      /* falls through*/
+      default:
+        labelOffsetX = size + 3;
+        break;
+    }
+
+    context.fillText(
+      node.label,
+      Math.round(node[prefix + 'x'] + labelOffsetX),
+      Math.round(node[prefix + 'y'] + labelOffsetY)
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+label_measure_def = {
+  render:function(node, context, settings) {
+    var fontSize,
+        prefix = settings('prefix') || '',
+        size = node[prefix + 'size'],
+        labelWidth,
+        labelOffsetX,
+        labelOffsetY,
+        alignment = settings('labelAlignment');
+
+    if (size < settings('labelThreshold'))
+      return;
+
+    if (!node.label || typeof node.label !== 'string')
+      return;
+
+    fontSize = (settings('labelSize') === 'fixed') ?
+      settings('defaultLabelSize') :
+      settings('labelSizeRatio') * size;
+
+    context.font = (settings('fontStyle') ? settings('fontStyle') + ' ' : '') +
+      fontSize + 'px ' + settings('font');
+    context.fillStyle = (settings('labelColor') === 'node') ?
+      (node.color || settings('defaultNodeColor')) :
+      settings('defaultLabelColor');
+
+    labelWidth = 0.5*node.label.length*fontSize;
+    labelOffsetX = - labelWidth / 2;
+    labelOffsetY = fontSize / 3;
+
+    switch (alignment) {
+      case 'bottom':
+        labelOffsetY = + size + 4 * fontSize / 3;
+        break;
+      case 'center':
+        break;
+      case 'left':
+        labelOffsetX = - size - 3 - labelWidth;
+        break;
+      case 'top':
+        labelOffsetY = - size - 2 * fontSize / 3;
+        break;
+      case 'inside':
+        if (labelWidth <= (size + fontSize / 3) * 2) {
+          break;
+        }
+      /* falls through*/
+      case 'right':
+      /* falls through*/
+      default:
+        labelOffsetX = size + 3;
+        break;
+    }
+
+    context.fillText(
+      node.label,
+      Math.round(node[prefix + 'x'] + labelOffsetX),
+      Math.round(node[prefix + 'y'] + labelOffsetY)
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+label_combined_def = {
+  render:function(node, context, settings) {
+    var fontSize,
+        prefix = settings('prefix') || '',
+        size = node[prefix + 'size'],
+        labelWidth,
+        labelOffsetX,
+        labelOffsetY,
+        alignment = settings('labelAlignment');
+
+    if (size < settings('labelThreshold'))
+      return;
+
+    if (!node.label || typeof node.label !== 'string')
+      return;
+
+    fontSize = (settings('labelSize') === 'fixed') ?
+      settings('defaultLabelSize') :
+      settings('labelSizeRatio') * size;
+/*
+    context.font = (settings('fontStyle') ? settings('fontStyle') + ' ' : '') +
+      fontSize + 'px ' + settings('font');
+    context.fillStyle = (settings('labelColor') === 'node') ?
+      (node.color || settings('defaultNodeColor')) :
+      settings('defaultLabelColor');
+*/
+    labelWidth = 0.5*node.label.length*fontSize;
+    labelOffsetX = - labelWidth / 2;
+    labelOffsetY = fontSize / 3;
+
+    switch (alignment) {
+      case 'bottom':
+        labelOffsetY = + size + 4 * fontSize / 3;
+        break;
+      case 'center':
+        break;
+      case 'left':
+        labelOffsetX = - size - 3 - labelWidth;
+        break;
+      case 'top':
+        labelOffsetY = - size - 2 * fontSize / 3;
+        break;
+      case 'inside':
+        if (labelWidth <= (size + fontSize / 3) * 2) {
+          break;
+        }
+      /* falls through*/
+      case 'right':
+      /* falls through*/
+      default:
+        labelOffsetX = size + 3;
+        break;
+    }
+
+    context.fillText(
+      node.label,
+      Math.round(node[prefix + 'x'] + labelOffsetX),
+      Math.round(node[prefix + 'y'] + labelOffsetY)
+    );
+  }
+}
+
+
+node_no_fill_def = function(node, context, settings) {
+  var prefix = settings('prefix') || '';
+
+  //context.fillStyle = node.color || settings('defaultNodeColor');
+  context.beginPath();
+  context.arc(
+    node[prefix + 'x'],
+    node[prefix + 'y'],
+    node[prefix + 'size'],
+    0,
+    Math.PI * 2,
+    true
+  );
+
+  context.closePath();
+  context.fill();
+};
