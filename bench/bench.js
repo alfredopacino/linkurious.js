@@ -80,7 +80,7 @@ defs = {
     'optims combined': final_def,
 };
 
-defs = {
+defs2 = {
   'optims combined': final_def,
 }
 
