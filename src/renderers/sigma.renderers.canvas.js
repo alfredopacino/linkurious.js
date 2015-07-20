@@ -102,6 +102,71 @@
     this.resize(false);
   };
 
+  /**
+   * Static method to render edges or nodes with the given renderers
+   *
+   * @param  {object}       params     The parameters passed in an object
+   * {
+   *   renderers: {object}              Renderers indexed by types
+   *   type:      {string}              "edges" or "nodes"
+   *   ctx:       {Context2D}           Canvas Context to draw on
+   *   settings:  {object}              Settings object to use
+   *   elements:  {array}               Elements to render
+   *   graph?:    {sigma.classes.graph} Graph object
+   *                                    (only necessary for edge rendering)
+   *   start?:    {integer}             Starting index of the elements to render
+   *   end?:      {integer}             Last index of the elements to render
+   * }
+   */
+  sigma.renderers.canvas.applyRenderers = function(params) {
+    var i,
+        renderer,
+        specializedRenderer,
+        def,
+        render,
+        els = params.elements,
+        elementType = (params.elements || params.type == 'edges' ?
+              'defaultEdgeType' : 'defaultNodeType');
+
+    params.start = params.start || 0;
+    params.end = params.end || params.elements.length;
+    params.end = Math.min(params.elements.length, params.end);
+
+    for (renderer in params.renderers) {
+      if (params.renderers[renderer].pre) {
+        params.renderers[renderer].pre(params.ctx, params.settings);
+      }
+    }
+    for (i = params.start; i < params.end; i++) {
+      if (!els[i].hidden) {
+        specializedRenderer = params.renderers[
+          els[i].type || params.settings(params.options, elementType)
+        ];
+        def = (specializedRenderer || params.renderers.def);
+        render = (def.render || def);
+        if (params.type == 'edges') {
+          render(
+            els[i],
+            params.graph.nodes(els[i].source),
+            params.graph.nodes(els[i].target),
+            params.ctx,
+            params.settings
+          );
+        }else {
+          render(
+            els[i],
+            params.ctx,
+            params.settings
+          );
+        }
+      }
+    }
+    for (renderer in params.renderers) {
+      if (params.renderers[renderer].post) {
+        params.renderers[renderer].post(params.ctx, params.settings);
+      }
+    }
+  };
 
   /**
    * Render edges or nodes with the given renderers
@@ -169,6 +234,32 @@
     }
   };
 
+  /**
+   * Render a batch of edges
+   *
+   * @param    {integer}      start    Starting index of the elements to render
+   * @param    {integer}      end      Last index of the elements to render
+   * @param    {object}       settings Settings to use
+   */
+  sigma.renderers.canvas.prototype.renderEdges =
+          function(start, end, settings) {
+    var renderParams = {
+      renderers: sigma.canvas.edges,
+      type: 'edges',
+      elements: this.edgesOnScreen,
+      ctx: this.contexts.edges,
+      start: start,
+      end: end,
+      graph: this.graph,
+      settings: settings
+    };
+    sigma.renderers.canvas.applyRenderers(renderParams);
+    if (settings('drawEdgeLabels')) {
+      renderParams.renderers = sigma.canvas.edges.labels;
+      renderParams.ctx = this.contexts.labels;
+      sigma.renderers.canvas.applyRenderers(renderParams);
+    }
+  };
 
   /**
    * Render a batch of edges
@@ -284,7 +375,7 @@
       }
 
       // If the "batchEdgesDrawing" settings is true, edges are batched:
-      if (this.settings(options, 'batchEdgesDrawing')) {
+      if (embedSettings('batchEdgesDrawing')) {
         id = 'edges_' + this.conradId;
         batchSize = embedSettings('canvasEdgesBatchSize');
 
@@ -298,7 +389,7 @@
           tempGCO = this.contexts.edges.globalCompositeOperation;
           this.contexts.edges.globalCompositeOperation = 'destination-over';
 
-          this.renderEdges(options, start, end);
+          this.renderEdges(start, end, embedSettings);
 
           // Restore original globalCompositeOperation:
           this.contexts.edges.globalCompositeOperation = tempGCO;
