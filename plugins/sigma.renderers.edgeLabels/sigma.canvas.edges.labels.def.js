@@ -41,9 +41,7 @@
           settings('fontStyle'),
         x = (source[prefix + 'x'] + target[prefix + 'x']) / 2,
         y = (source[prefix + 'y'] + target[prefix + 'y']) / 2,
-        dX = target[prefix + 'x'] - source[prefix + 'x'],
-        dY = target[prefix + 'y'] - source[prefix + 'y'],
-        sign = (source[prefix + 'x'] < target[prefix + 'x']) ? 1 : -1;
+        dX, dY, sign;
 
     // The font size is sublineraly proportional to the edge size, in order to
     // avoid very large labels on screen.
@@ -81,9 +79,13 @@
     // force horizontal alignment if not enough space to draw the text,
     // otherwise draw text along the edge line:
     if ('auto' === settings('edgeLabelAlignment')) {
-      var
-        labelWidth = context.measureText(edge.label).width,
-        edgeLength = sigma.utils.getDistance(
+      var labelWidth;
+      if(settings('approximateLabelWidth')){
+        labelWidth = 0.5*edge.label.length*fontSize;
+      }else{
+        labelWidth = context.measureText(edge.label).width;
+      }
+      var edgeLength = sigma.utils.getDistance(
           source[prefix + 'x'],
           source[prefix + 'y'],
           target[prefix + 'x'],
@@ -93,6 +95,9 @@
         edgeLength = edgeLength - source[prefix + 'size'] - target[prefix + 'size'] - 10;
 
       if (labelWidth < edgeLength) {
+        dX = target[prefix + 'x'] - source[prefix + 'x'];
+        dY = target[prefix + 'y'] - source[prefix + 'y'];
+        sign = (source[prefix + 'x'] < target[prefix + 'x']) ? 1 : -1;
         angle = Math.atan2(dY * sign, dX * sign);
       }
     }
