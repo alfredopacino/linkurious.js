@@ -432,7 +432,7 @@
           self.dispatchEvent('shown', event.data);
         }, no.delay);
       });
-
+      //TODO delay before hide
       s.bind(no.hide, function(event) {
         var p = _tooltip;
         cancel();
@@ -489,6 +489,7 @@
         }, eo.delay);
       });
 
+      //TODO delay before hide
       s.bind(eo.hide, function(event) {
         var p = _tooltip;
         cancel();
