@@ -67,8 +67,8 @@ function bench(name, fn, options){
 all_defs = {}
 
 all_defs['sigma.canvas.edges.labels'] = {
-  //'only text': justtext_def,
-  //'text + angle': textangle_def,
+  'only fillText()': justtext_def,
+  'fillText() + angle': textangle_def,
   //'text + angle with save()': textangle_save_def,
   //'force aligned': force_aligned_def,
   //'no ctx.save()/restore()': no_ctx_save_def,
