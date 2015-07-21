@@ -2,7 +2,7 @@ var container = document.getElementById('graph-container');
 
 var i,
     s,
-    N = 700,
+    N = 600,
     E = 1000,
     g = {
       nodes: [],
@@ -14,11 +14,18 @@ for (i = 0; i < N; i++)
   g.nodes.push({
     id: 'n' + i,
     label: 'Node ' + i,
-    x: Math.random()*2,
-    y: Math.random(),
+    x: Math.random()*20,
+    y: Math.random()*10,
     size: Math.random(),
     color: '#666',
-    //active: [false, true][Math.random() * 1.15 | 0]
+    glyphs: [{
+     'position': 'top-left',
+      'content': 'A'
+    }, {
+     'position': 'top-right',
+      'content': 'B'
+    }],
+    active: [false, true][Math.random() > 0.95 ? 1: 0],
   });
 
 for (i = 0; i < E; i++)
@@ -28,7 +35,7 @@ for (i = 0; i < E; i++)
     target: 'n' + (Math.random() * N | 0),
     size: Math.random(),
     color: '#ccc',
-    //active: [false, true][Math.random() * 1.05 | 0],
+    active: [false, true][Math.random() > 0.95 ? 1: 0],
     label: 'Edge edgy '+i
   });
 
@@ -38,13 +45,20 @@ s = new sigma({
 });
 
 // Initialize camera:
-s.addCamera('cam'),
+s.addCamera('cam');
 
 // Initialize the two renderers:
-s.addRenderer({
+var renderer = s.addRenderer({
   container: container,
   type: 'canvas',
   camera: 'cam'
+});
+
+renderer.bind('render', function(e) {
+  renderer.halo({
+    nodes: s.graph.nodes()
+  });
+  renderer.glyphs();
 });
 
 s.refresh();

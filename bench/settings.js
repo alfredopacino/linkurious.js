@@ -51,7 +51,7 @@ var settings = {
     glyphFillColor: '#999999',
     glyphStrokeColor: 'transparent',
     glyphFont: 'robotoregular',
-    glyphThreshold: 2,
+    glyphThreshold: 0,
     glyphTextColor: 'white',
 
     // Drag nodes:

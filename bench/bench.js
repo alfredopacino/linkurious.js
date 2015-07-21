@@ -74,14 +74,13 @@ all_defs['sigma.canvas.edges.labels'] = {
   //'no ctx.save()/restore()': no_ctx_save_def,
   //'caching context.font val': ctx_font_caching,
   //measure_heuristic: measure_def,
-  'optims combined': final_def,
+  //'optims combined': final_def,
+  'previous':previous_def,
 };
 
 
 all_defs['sigma.canvas.labels'] = {
-  limit_ctx_switch:ctx_label_def,
-  measure:label_measure_def,
-  label_combined_def:label_combined_def,
+  limit_ctx_switch:label_combined_def,
 }
 
 /*
