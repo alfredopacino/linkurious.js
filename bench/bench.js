@@ -34,7 +34,7 @@ function tocsv(results, name){
 
 function bench(name, fn, options){
   options = options || {};
-  samples = options.samples || 50;
+  samples = options.samples || 60;
   maxtime = options.maxtime || 5/samples; //seconds
   var start, total, times = [];
   var i = 0;
@@ -67,13 +67,13 @@ function bench(name, fn, options){
 all_defs = {}
 
 all_defs['sigma.canvas.edges.labels'] = {
-  'only text': justtext_def,
-  'text + angle': textangle_def,
-  'text + angle with save()': textangle_save_def,
-  'force aligned': force_aligned_def,
-  'no ctx.save()/restore()': no_ctx_save_def,
-  'caching context.font val': ctx_font_caching,
-   measure_heuristic: measure_def,
+  //'only text': justtext_def,
+  //'text + angle': textangle_def,
+  //'text + angle with save()': textangle_save_def,
+  //'force aligned': force_aligned_def,
+  //'no ctx.save()/restore()': no_ctx_save_def,
+  //'caching context.font val': ctx_font_caching,
+  //measure_heuristic: measure_def,
   'optims combined': final_def,
 };
 
@@ -96,6 +96,8 @@ to_test = function(){
 
 //bench('warm vm',to_test)
 
+
+
 for(thing_dot_def in all_defs){
   console.group(thing_dot_def);
   var table = []
@@ -115,3 +117,4 @@ for(thing_dot_def in all_defs){
   console.table(table);
   console.groupEnd();
 }
+

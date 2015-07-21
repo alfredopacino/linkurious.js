@@ -95,5 +95,8 @@ var settings = {
      * ANIMATIONS SETTINGS:
      * ********************
      */
-    animationsTime: 1000
+    animationsTime: 1000,
+
+
+    approximateLabelWidth:true,
   }

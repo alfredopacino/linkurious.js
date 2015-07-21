@@ -18,7 +18,7 @@ for (i = 0; i < N; i++)
     y: Math.random(),
     size: Math.random(),
     color: '#666',
-    active: [false, true][Math.random() * 1.15 | 0]
+    //active: [false, true][Math.random() * 1.15 | 0]
   });
 
 for (i = 0; i < E; i++)
@@ -28,7 +28,7 @@ for (i = 0; i < E; i++)
     target: 'n' + (Math.random() * N | 0),
     size: Math.random(),
     color: '#ccc',
-    active: [false, true][Math.random() * 1.05 | 0],
+    //active: [false, true][Math.random() * 1.05 | 0],
     label: 'Edge edgy '+i
   });
 
