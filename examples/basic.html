@@ -64,19 +64,11 @@
   <div id="graph-container"></div>
 </div>
 <script>
-/**
- * This is a basic example on how to instantiate sigma. A random graph is
- * generated and stored in the "graph" variable, and then sigma is instantiated
- * directly with the graph.
- *
- * The simple instance of sigma is enough to make it render the graph on the on
- * the screen, since the graph is given directly to the constructor.
- */
- 
+
  sigma.canvas.nodes.ShyNode = function(node, context, settings) {
     var prefix = settings('prefix') || '';
 	
-	
+	//nodeThreshold guard	
 	if (node[prefix + 'size'] <= settings('nodeThreshold')){
 		return;	
 	}
@@ -106,8 +98,8 @@ sigma.canvas.edges.ShyEdge = function(edge, source, target, context, settings) {
         defaultNodeColor = settings('defaultNodeColor'),
         defaultEdgeColor = settings('defaultEdgeColor');
 
-	var hided=source[prefix + 'size'] <= settings('nodeThreshold')||target[prefix + 'size'] <= settings('nodeThreshold')
-	if(hided)
+	//nodeThreshold guard
+	if(source[prefix + 'size'] <= settings('nodeThreshold')||target[prefix + 'size'] <= settings('nodeThreshold'))
 		return;
 	
 
