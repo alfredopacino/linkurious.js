@@ -1,0 +1,194 @@
+<!-- START SIGMA IMPORTS -->
+<script src="../src/sigma.core.js"></script>
+<script src="../src/conrad.js"></script>
+<script src="../src/utils/sigma.utils.js"></script>
+<script src="../src/utils/sigma.polyfills.js"></script>
+<script src="../src/sigma.settings.js"></script>
+<script src="../src/classes/sigma.classes.dispatcher.js"></script>
+<script src="../src/classes/sigma.classes.configurable.js"></script>
+<script src="../src/classes/sigma.classes.graph.js"></script>
+<script src="../src/classes/sigma.classes.camera.js"></script>
+<script src="../src/classes/sigma.classes.quad.js"></script>
+<script src="../src/captors/sigma.captors.mouse.js"></script>
+<script src="../src/captors/sigma.captors.touch.js"></script>
+<script src="../src/renderers/sigma.renderers.canvas.js"></script>
+<script src="../src/renderers/sigma.renderers.webgl.js"></script>
+<script src="../src/renderers/sigma.renderers.svg.js"></script>
+<script src="../src/renderers/sigma.renderers.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="../src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="../src/renderers/svg/sigma.svg.edges.curvedArrow.js"></script>
+<script src="../src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="../src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="../src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="../src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="../src/misc/sigma.misc.animation.js"></script>
+<script src="../src/misc/sigma.misc.bindEvents.js"></script>
+<script src="../src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="../src/misc/sigma.misc.drawHovers.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+
+
+<!-- END SIGMA IMPORTS -->
+<div id="container">
+  <style>
+    #graph-container {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+    }
+  </style>
+  <a onclick="zoomin()">zoomin</a>
+  <div id="graph-container"></div>
+</div>
+<script>
+
+ sigma.canvas.nodes.ShyNode = function(node, context, settings) {
+    var prefix = settings('prefix') || '';
+	
+	//nodeThreshold guard	
+	if (node[prefix + 'size'] <= settings('nodeThreshold')){
+		return;	
+	}
+  
+		context.fillStyle = node.color || settings('defaultNodeColor');
+		context.beginPath();
+		context.arc(
+      node[prefix + 'x'],
+      node[prefix + 'y'],
+      node[prefix + 'size'],
+      0,
+      Math.PI * 2,
+      true
+    );
+
+    context.closePath();
+    context.fill();
+	
+  };
+ 
+ sigma.utils.pkg('sigma.canvas.edges');
+sigma.canvas.edges.ShyEdge = function(edge, source, target, context, settings) {
+    var color = edge.color,
+        prefix = settings('prefix') || '',
+        size = edge[prefix + 'size'] || 1,
+        edgeColor = settings('edgeColor'),
+        defaultNodeColor = settings('defaultNodeColor'),
+        defaultEdgeColor = settings('defaultEdgeColor');
+
+	//nodeThreshold guard
+	if(source[prefix + 'size'] <= settings('nodeThreshold')||target[prefix + 'size'] <= settings('nodeThreshold'))
+		return;
+	
+
+    if (!color)
+      switch (edgeColor) {
+        case 'source':
+          color = source.color || defaultNodeColor;
+          break;
+        case 'target':
+          color = target.color || defaultNodeColor;
+          break;
+        default:
+          color = defaultEdgeColor;
+          break;
+      }
+
+    context.strokeStyle = color;
+    context.lineWidth = size;
+    context.beginPath();
+    context.moveTo(
+      source[prefix + 'x'],
+      source[prefix + 'y']
+    );
+    context.lineTo(
+      target[prefix + 'x'],
+      target[prefix + 'y']
+    );
+    context.stroke();
+  };
+
+var i,
+    s,
+    N = 20,
+    E = 50,
+    g = {
+      nodes: [],
+      edges: []
+    };
+
+// Generate a random graph:
+for (i = 0; i < N; i++)
+  g.nodes.push({
+    id: 'n' + i,
+    label: 'Node ' + i,
+    x: 100*Math.cos(Math.PI * 2 * i / N),
+    y: 100*Math.sin(Math.PI * 2 * i / N),
+    size: i*1+10,
+    color: '#666',
+    type: 'ShyNode'
+
+  });
+
+for (i = 0; i < E; i++)
+  g.edges.push({
+    id: 'e' + i,
+    source: 'n' + (Math.random() * N | 0),
+    target: 'n' + (Math.random() * N | 0),
+    size: i*1+10,
+    color: '#ccc',
+	type: 'ShyEdge'
+  });
+
+// Instantiate sigma:
+s = new sigma({
+  graph: g,
+  settings:{
+	labelThreshold:5,
+	nodeThreshold:5,
+	//edgeThreshold:00,
+	//autoRescale:false
+  },
+  renderers: [
+    {
+      container: document.getElementById('graph-container'),
+      type: 'canvas' // sigma.renderers.canvas works as well
+    }
+  ]
+});
+
+
+function zoomin(){
+var c = s.camera;
+console.log('s.camera')
+console.log(s.camera)
+sigma.misc.animation.camera(c, {
+  ratio: c.ratio / c.settings('zoomingRatio')
+}, {
+  duration: 1000
+});
+
+  }
+</script>
