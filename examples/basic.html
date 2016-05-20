@@ -45,10 +45,6 @@
 <script src="../src/misc/sigma.misc.bindEvents.js"></script>
 <script src="../src/misc/sigma.misc.bindDOMEvents.js"></script>
 <script src="../src/misc/sigma.misc.drawHovers.js"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-
-
 <!-- END SIGMA IMPORTS -->
 <div id="container">
   <style>
@@ -60,80 +56,21 @@
       position: absolute;
     }
   </style>
-  <a onclick="zoomin()">zoomin</a>
   <div id="graph-container"></div>
 </div>
 <script>
-
- sigma.canvas.nodes.ShyNode = function(node, context, settings) {
-    var prefix = settings('prefix') || '';
-	
-	//nodeThreshold guard	
-	if (node[prefix + 'size'] <= settings('nodeThreshold')){
-		return;	
-	}
-  
-		context.fillStyle = node.color || settings('defaultNodeColor');
-		context.beginPath();
-		context.arc(
-      node[prefix + 'x'],
-      node[prefix + 'y'],
-      node[prefix + 'size'],
-      0,
-      Math.PI * 2,
-      true
-    );
-
-    context.closePath();
-    context.fill();
-	
-  };
- 
- sigma.utils.pkg('sigma.canvas.edges');
-sigma.canvas.edges.ShyEdge = function(edge, source, target, context, settings) {
-    var color = edge.color,
-        prefix = settings('prefix') || '',
-        size = edge[prefix + 'size'] || 1,
-        edgeColor = settings('edgeColor'),
-        defaultNodeColor = settings('defaultNodeColor'),
-        defaultEdgeColor = settings('defaultEdgeColor');
-
-	//nodeThreshold guard
-	if(source[prefix + 'size'] <= settings('nodeThreshold')||target[prefix + 'size'] <= settings('nodeThreshold'))
-		return;
-	
-
-    if (!color)
-      switch (edgeColor) {
-        case 'source':
-          color = source.color || defaultNodeColor;
-          break;
-        case 'target':
-          color = target.color || defaultNodeColor;
-          break;
-        default:
-          color = defaultEdgeColor;
-          break;
-      }
-
-    context.strokeStyle = color;
-    context.lineWidth = size;
-    context.beginPath();
-    context.moveTo(
-      source[prefix + 'x'],
-      source[prefix + 'y']
-    );
-    context.lineTo(
-      target[prefix + 'x'],
-      target[prefix + 'y']
-    );
-    context.stroke();
-  };
-
+/**
+ * This is a basic example on how to instantiate sigma. A random graph is
+ * generated and stored in the "graph" variable, and then sigma is instantiated
+ * directly with the graph.
+ *
+ * The simple instance of sigma is enough to make it render the graph on the on
+ * the screen, since the graph is given directly to the constructor.
+ */
 var i,
     s,
-    N = 20,
-    E = 50,
+    N = 100,
+    E = 500,
     g = {
       nodes: [],
       edges: []
@@ -144,12 +81,10 @@ for (i = 0; i < N; i++)
   g.nodes.push({
     id: 'n' + i,
     label: 'Node ' + i,
-    x: 100*Math.cos(Math.PI * 2 * i / N),
-    y: 100*Math.sin(Math.PI * 2 * i / N),
-    size: i*1+10,
-    color: '#666',
-    type: 'ShyNode'
-
+    x: Math.random(),
+    y: Math.random(),
+    size: Math.random(),
+    color: '#666'
   });
 
 for (i = 0; i < E; i++)
@@ -157,38 +92,13 @@ for (i = 0; i < E; i++)
     id: 'e' + i,
     source: 'n' + (Math.random() * N | 0),
     target: 'n' + (Math.random() * N | 0),
-    size: i*1+10,
-    color: '#ccc',
-	type: 'ShyEdge'
+    size: Math.random(),
+    color: '#ccc'
   });
 
 // Instantiate sigma:
 s = new sigma({
   graph: g,
-  settings:{
-	labelThreshold:5,
-	nodeThreshold:5,
-	//edgeThreshold:00,
-	//autoRescale:false
-  },
-  renderers: [
-    {
-      container: document.getElementById('graph-container'),
-      type: 'canvas' // sigma.renderers.canvas works as well
-    }
-  ]
+  container: 'graph-container'
 });
-
-
-function zoomin(){
-var c = s.camera;
-console.log('s.camera')
-console.log(s.camera)
-sigma.misc.animation.camera(c, {
-  ratio: c.ratio / c.settings('zoomingRatio')
-}, {
-  duration: 1000
-});
-
-  }
 </script>
