@@ -434,6 +434,7 @@
           self.dispatchEvent('shown', event.data);
         }, no.delay);
       });
+      
 //TODO delay before hide tooltip
       s.bind(no.hide, function(event) {
         var p = _tooltip;
@@ -490,6 +491,7 @@
           self.dispatchEvent('shown', event.data);
         }, eo.delay);
       });
+      
 //TODO delay before hide tooltip
       s.bind(eo.hide, function(event) {
         var p = _tooltip;
